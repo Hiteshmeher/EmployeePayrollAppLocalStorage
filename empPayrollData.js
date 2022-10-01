@@ -1,79 +1,124 @@
-class EmployeePayrollData {
-    get id() {
-        return this._id;
-    }
-    set id(id) {
-        this._id = id
+class EmployeePayrollData{
+    
+    constructor(...params){
+        this.name = params[0];
+        this.profileImage = params[1];
+        this.gender = params[2];
+        this.department = params[3];
+        this.salary = params[4];
+        this.startDate = params[5];
+        this.notes = params[6];
     }
 
-    get name() {
+    get name(){
         return this._name;
     }
-
-    set name(name) {
-        let nameRegex = RegExp('^[A-Z]{1}[a-zA-Z\\s]{2,}$');
-        if (nameRegex.test(name))
+    set name(name){
+        let nameRegex = RegExp("^[A-Z]{1}[a-z]{2,}$");
+        if(nameRegex.test(name)){
             this._name = name;
-        else
-            throw new Error("Invalid Name");
+        }else{
+            throw "Invalid name";
+        }
+        
     }
 
-    get profilePic() {
-        return this._profilePic;
+    get profileImage(){
+        return this._profileImage;
+    }
+    set profileImage(profileImage){
+        this._profileImage = profileImage;
     }
 
-    set profilePic(profilePic) {
-        this._profilePic = profilePic;
-    }
-
-    get gender() {
+    get gender(){
         return this._gender;
     }
-
-    set gender(gender) {
-
+    set gender(gender){
         this._gender = gender;
     }
 
-    get department() {
+    get department(){
         return this._department;
     }
-
-    set department(department) {
+    set department(department){
         this._department = department;
     }
 
-    get salary() {
+    get salary(){
         return this._salary;
     }
-
-    set salary(salary) {
-
+    set salary(salary){
         this._salary = salary;
-
     }
 
-    get startDate() {
+    get startDate(){
         return this._startDate;
     }
-
+    
     set startDate(startDate){
-        this._startDate=startDate;
+        const currentDate = new Date();
+        //future.setDate(future.getDate() - 30);
+        let timeDiff = currentDate.getTime() - startDate.getTime();
+        let daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+        if(startDate <= currentDate && daysDiff <= 30){
+            this._startDate = startDate;
+        } else {
+            throw "Start date is invalid";
+        }
     }
 
-    get notes() {
+    get notes(){
         return this._notes;
     }
-
-    set notes(notes) {
+    set notes(notes){
         this._notes = notes;
     }
 
-    toString() {
-        const options = { year: 'numeric', month: 'long', day: 'numeric' };
-        const employeeDate = this.startDate == undefined ? "undefined" : 
-        this.startDate.toLocaleDateString("en-us", options);
-        return "id=" + this.id + "Name = " + this.name + ", profilePic = " + this.profilePic + ", Gender = " + this.gender + 
-        ", Department = " + this.department + ", Salary = " + this.salary + ", Start Date = " + employeeDate + ", Notes = " + this.notes;
+    toString(){
+        return "Name : "+this.name+", profile image : "+this.profileImage+", gender : "+this.gender
+        +", Department : "+this.department+ ", Salary : "+this.salary+" , start date : "+ this.startDate
+        +", notes : "+this.notes;
     }
+
 }
+
+function save(){
+
+    let empName = document.getElementById("name").value;
+
+    let empProfileImage = document.querySelector('input[name="profile"]:checked').value;
+
+    let empGender = document.querySelector('input[name="gender"]:checked').value;
+    
+    let empDepartment = document.querySelectorAll(".checkbox");
+    let empDepartmentArr = [];
+    for(let emp of empDepartment){
+        if(emp.checked){
+            empDepartmentArr.push(emp.value);
+        }
+    }
+    //salary
+    let empSalary = document.querySelector("#salary").value;
+    
+    //Start Date
+    let day = document.querySelector('#day').value;
+    let month = document.querySelector('#month').value;
+    let year = document.querySelector('#year').value;
+    let empStartDate = new Date(year,month,day);
+    let tempDate = new Date()
+
+    let empNotes = document.querySelector('#notes').value;
+
+    try{
+
+        let employeePayroll = new EmployeePayrollData(empName,empProfileImage,empGender,empDepartmentArr,empSalary,empStartDate,empNotes);
+        //empName,empProfileImage,empGender,empDepartmentArr,empSalary,empStartDate,empNotes
+
+        console.log(employeePayroll.toString());
+        
+    }catch(ex) {
+        console.error(ex);
+    }
+    
+}
+
